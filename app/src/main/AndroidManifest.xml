@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.kidslauncher">
+
+    <!-- Query permission (Remove if not needed) -->
+    <queries>
+        <package android:name="com.someapp.package" />
+    </queries>
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- Feature Requirements -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+
+    <application
+        android:label="KidsLauncher"
+        android:icon="@mipmap/ic_launcher"
+        android:banner="@mipmap/ic_launcher"
+        android:theme="@style/Theme.KidsLauncher"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="false"
+        android:grantUriPermissions="true"
+        tools:replace="android:banner">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="Kids Launcher"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+            <!-- Launcher and TV Home Screen Intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- TV Launcher Metadata -->
+        <meta-data
+            android:name="com.android.tv.launcher"
+            android:resource="@xml/leanback_launcher" />
+
+
+    </application>
+
+</manifest>
