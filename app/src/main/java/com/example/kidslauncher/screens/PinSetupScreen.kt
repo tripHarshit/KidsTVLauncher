@@ -1,6 +1,6 @@
 package com.example.kidslauncher.screens
 
-import androidx.compose.material.OutlinedTextField
+
 import androidx.tv.material3.Text
 import com.example.kidslauncher.models.PinManager
 
@@ -8,12 +8,12 @@ import com.example.kidslauncher.models.PinManager
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-
 import com.example.kidslauncher.MainActivity
 
 @Composable
@@ -45,3 +45,4 @@ fun PinSetupScreen(context: Context) {
         }
     }
 }
+

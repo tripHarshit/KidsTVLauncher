@@ -2,6 +2,7 @@ package com.example.kidslauncher
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.kidslauncher.models.PinManager
@@ -22,9 +23,10 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        Log.d("BackPress", "Navigating to PIN screen")
         val intent = Intent(this, PinScreenActivity::class.java)
         startActivity(intent)
         finish()
     }
 }
+

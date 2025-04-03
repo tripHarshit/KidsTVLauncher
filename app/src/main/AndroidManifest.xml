@@ -5,7 +5,7 @@
 
     <!-- Query permission (Remove if not needed) -->
     <queries>
-        <package android:name="com.someapp.package" />
+        <package android:name="com.kidslauncher.package" />
     </queries>
 
     <!-- Permissions -->
@@ -50,6 +50,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".PinScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KidsLauncher">
+        </activity>
         <!-- TV Launcher Metadata -->
         <meta-data
             android:name="com.android.tv.launcher"

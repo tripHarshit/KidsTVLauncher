@@ -1,6 +1,5 @@
 package com.example.kidslauncher.utils
-
-import androidx.compose.material.AlertDialog
+import androidx.compose.material3.AlertDialog
 
 
 import androidx.compose.runtime.Composable
