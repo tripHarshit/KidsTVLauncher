@@ -82,9 +82,6 @@ fun preloadApprovedApps(context: Context) {
     }
 }
 
-
-
-
 fun getAllInstalledApps(context: Context): List<AppInfo> {
     val pm = context.packageManager
 
