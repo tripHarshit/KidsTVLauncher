@@ -15,7 +15,7 @@ import com.example.kidslauncher.ui.theme.Typography
 @Composable
 fun KidsLauncherTheme(content: @Composable () -> Unit) {
     val colors = lightColorScheme(
-        primary = Color(0xFFFFA000), // Orange
+        primary = Color(0xFFFFA000),
         background = Color(0xFFF5F5F5),
         onPrimary = Color.White
     )

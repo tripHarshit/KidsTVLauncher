@@ -42,7 +42,7 @@ fun PinSetupScreen(context: Context) {
             Text(
                 text = "Set a PIN to exit Kids Launcher",
                 fontSize = 20.sp,
-                color = Color(0xFF4A148C), // Deep purple
+                color = Color(0xFF4A148C),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -74,7 +74,7 @@ fun PinSetupScreen(context: Context) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)) // Vibrant orange
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
             ) {
                 Text("Save PIN", fontSize = 16.sp, color = Color.White)
             }

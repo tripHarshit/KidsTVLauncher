@@ -21,8 +21,8 @@ object PinManager {
     }
 
     fun isPinSet(context: Context): Boolean {
-        val storedPin = getPin(context) // Retrieve the stored PIN
-        Log.d("PinManager", "Stored PIN: $storedPin") // Debug log to check the stored PIN
+        val storedPin = getPin(context)
+        Log.d("PinManager", "Stored PIN: $storedPin")
 
         return storedPin != null
     }

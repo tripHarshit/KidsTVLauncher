@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent) // Redirect to Home
+            startActivity(intent)
         }
     }
 }
@@ -52,7 +52,7 @@ private fun getRunningApps(context: Context): List<String> {
 
     val appList = usageStatsManager.queryUsageStats(
         UsageStatsManager.INTERVAL_DAILY,
-        time - 1000 * 10, // Check last 10 seconds
+        time - 1000 * 10,
         time
     )
 

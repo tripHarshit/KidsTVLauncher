@@ -13,11 +13,11 @@ import com.example.kidslauncher.utils.getApprovedApps
 
 class BlockSettingsService : AccessibilityService() {
 
-    private var approvedApps: Set<String> = emptySet() // ✅ Store only package names
+    private var approvedApps: Set<String> = emptySet()
 
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            approvedApps = getApprovedApps(context).map { it.packageName }.toSet() // ✅ Convert to Set<String>
+            approvedApps = getApprovedApps(context).map { it.packageName }.toSet()
             Log.d("BlockService", "Approved apps updated: $approvedApps")
         }
     }
@@ -25,7 +25,7 @@ class BlockSettingsService : AccessibilityService() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         super.onCreate()
-        approvedApps = getApprovedApps(this).map { it.packageName }.toSet() // ✅ Convert here too
+        approvedApps = getApprovedApps(this).map { it.packageName }.toSet()
 
         val filter = IntentFilter("com.example.kidslauncher.UPDATE_APPROVED_APPS")
         registerReceiver(updateReceiver, filter)
@@ -38,7 +38,7 @@ class BlockSettingsService : AccessibilityService() {
 
             if (packageName !in approvedApps) {
                 Log.d("BlockService", "Blocking app: $packageName")
-                performGlobalAction(GLOBAL_ACTION_HOME) // ✅ Blocks unauthorized apps
+                performGlobalAction(GLOBAL_ACTION_HOME)
             }
         }
     }

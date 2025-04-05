@@ -48,7 +48,7 @@ fun AppSelectionScreen(onAppSelected: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF8E1)) // Soft creamy background
+            .background(Color(0xFFFFF8E1))
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -71,7 +71,7 @@ fun AppItem(app: AppInfo, context: Context, onClick: (() -> Unit)? = null) {
         modifier = Modifier
             .size(140.dp)
             .padding(12.dp)
-            .background(Color(0xFFFFF176), shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)) // Bright yellow with rounded corners
+            .background(Color(0xFFFFF176), shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
             .clickable { onClick?.invoke() }
     ) {
         Column(
@@ -91,7 +91,7 @@ fun AppItem(app: AppInfo, context: Context, onClick: (() -> Unit)? = null) {
             Text(
                 app.name,
                 fontSize = 16.sp,
-                color = Color(0xFF4A148C), // Vibrant deep purple
+                color = Color(0xFF4A148C),
                 maxLines = 1
             )
         }

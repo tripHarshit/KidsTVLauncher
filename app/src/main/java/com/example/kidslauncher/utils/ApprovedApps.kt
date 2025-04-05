@@ -20,7 +20,7 @@ fun getApprovedApps(context: Context): List<AppInfo> {
                 icon = packageManager.getApplicationIcon(packageName)
             )
         } catch (e: PackageManager.NameNotFoundException) {
-            null // Skip apps that are not found
+            null
         }
     }
 }
@@ -29,13 +29,12 @@ fun addApprovedApp(context: Context, packageName: String) {
     val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
     val approvedPackages = sharedPreferences.getStringSet("approved_apps", emptySet())?.toMutableSet() ?: mutableSetOf()
 
-    approvedPackages.add(packageName) // Add the new app
+    approvedPackages.add(packageName)
 
     sharedPreferences.edit {
         putStringSet("approved_apps", approvedPackages)
     }
 
-    // Notify the system that the approved list has been updated
     val intent = Intent("com.example.kidslauncher.UPDATE_APPROVED_APPS")
     context.sendBroadcast(intent)
 }
@@ -48,7 +47,6 @@ fun saveApprovedApps(context: Context, approvedApps: List<String>) {
         apply()
     }
 
-    // Notify BlockSettingsService to refresh approved apps
     val intent = Intent("com.example.kidslauncher.UPDATE_APPROVED_APPS")
     context.sendBroadcast(intent)
 }

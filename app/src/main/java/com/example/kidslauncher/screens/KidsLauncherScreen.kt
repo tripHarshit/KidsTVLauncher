@@ -35,11 +35,12 @@ fun KidsLauncherScreen() {
     val context = LocalContext.current
     var showAppSelection by remember { mutableStateOf(false) }
     var installedApps by remember { mutableStateOf(getApprovedApps(context)) }
+    var isRemovalMode by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFDE7)) // light warm yellow background
+            .background(Color(0xFFFFFDE7))
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(4),
@@ -47,26 +48,48 @@ fun KidsLauncherScreen() {
             contentPadding = PaddingValues(16.dp)
         ) {
             items(installedApps) { app ->
-                AppItem(app, context)
+                AppItem(
+                    app = app,
+                    context = context,
+                    isRemovalMode = isRemovalMode,
+                    onRemove = {
+                        // Remove app from approved list
+                        val newList = installedApps.filter { it.packageName != app.packageName }
+                        saveApprovedApps(context, newList.map { it.packageName })
+                        installedApps = getApprovedApps(context)
+                    }
+                )
             }
         }
 
-        // Button to open App Selection Screen
-        Button(
-            onClick = { showAppSelection = true },
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFB74D), // soft orange
-                contentColor = Color.White
-            )
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                "Add Approved App",
-                fontSize = 18.sp,
-                color = Color(0xFF4E342E)
-            )
+            // Add App Button
+            Button(
+                onClick = { showAppSelection = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFFB74D),
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Add Apps", fontSize = 16.sp)
+            }
+
+            // Remove App Button
+            Button(
+                onClick = { isRemovalMode = !isRemovalMode },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isRemovalMode) Color(0xFFEF5350) else Color(0xFF81C784),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(if (isRemovalMode) "Cancel Remove" else "Remove Apps", fontSize = 16.sp)
+            }
         }
 
         if (showAppSelection) {
@@ -80,9 +103,8 @@ fun KidsLauncherScreen() {
     }
 }
 
-
 @Composable
-fun AppItem(app: AppInfo, context: Context) {
+fun AppItem(app: AppInfo, context: Context, isRemovalMode: Boolean, onRemove: () -> Unit) {
     Box(
         modifier = Modifier
             .size(150.dp)
@@ -93,12 +115,17 @@ fun AppItem(app: AppInfo, context: Context) {
             )
             .border(
                 width = 2.dp,
-                color = Color(0xFFFB8C00), // orange border for clarity
+                color = if (isRemovalMode) Color.Red else Color(0xFFFB8C00),
                 shape = RoundedCornerShape(24.dp)
             )
             .clickable {
-                val launchIntent = context.packageManager.getLaunchIntentForPackage(app.packageName)
-                launchIntent?.let { context.startActivity(it) }
+                if (isRemovalMode) {
+                    onRemove()
+                } else {
+                    context.packageManager.getLaunchIntentForPackage(app.packageName)?.let {
+                        context.startActivity(it)
+                    }
+                }
             }
     ) {
         Column(
@@ -106,6 +133,24 @@ fun AppItem(app: AppInfo, context: Context) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Removal mode indicator
+            if (isRemovalMode) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(8.dp)
+                        .size(24.dp)
+                        .background(Color.Red, RoundedCornerShape(4.dp))
+                ) {
+                    Text(
+                        "×",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+
             app.icon?.let { drawable ->
                 Image(
                     bitmap = drawable.toBitmap().asImageBitmap(),
@@ -118,7 +163,7 @@ fun AppItem(app: AppInfo, context: Context) {
             Text(
                 app.name,
                 fontSize = 16.sp,
-                color = Color(0xFF4A148C), // deep purple
+                color = Color(0xFF4A148C),
                 maxLines = 1
             )
         }

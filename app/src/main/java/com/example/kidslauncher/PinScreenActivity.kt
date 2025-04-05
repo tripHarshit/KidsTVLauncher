@@ -47,14 +47,14 @@ fun PinVerificationScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF176)) // Full screen light yellow
+            .background(Color(0xFFFFF176))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFFF176), shape = RoundedCornerShape(24.dp)) // Bright yellow card
+                .background(Color(0xFFFFF176), shape = RoundedCornerShape(24.dp))
                 .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -62,7 +62,7 @@ fun PinVerificationScreen() {
             Text(
                 text = "🔐 Enter PIN to Exit",
                 fontSize = 24.sp,
-                color = Color(0xFF2E7D32) // Green
+                color = Color(0xFF2E7D32)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -81,19 +81,16 @@ fun PinVerificationScreen() {
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 20.sp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9C4), RoundedCornerShape(16.dp)) // Soft yellow inside
+                    .background(Color(0xFFFFF9C4), RoundedCornerShape(16.dp))
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = {
-                    Log.d("PinScreen", "Button clicked with PIN: $enteredPin")
                     if (enteredPin == storedPin) {
-                        Log.d("PinScreen", "PIN verified successfully")
                         (context as? Activity)?.finishAffinity()
                     } else {
-                        Log.d("PinScreen", "Incorrect PIN: correct $storedPin")
                         context.startActivity(Intent(context, MainActivity::class.java))
                         Toast.makeText(context, "WRONG PIN!! Exit Revoked", Toast.LENGTH_LONG).show()
                     }
@@ -102,13 +99,32 @@ fun PinVerificationScreen() {
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFEF5350), // Reddish pink
+                    containerColor = Color(0xFFEF5350),
                     contentColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text("Verify", fontSize = 18.sp)
             }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            // New Cancel Button
+            Text(
+                text = "Cancel",
+                fontSize = 18.sp,
+                color = Color(0xFF2E7D32),
+                modifier = Modifier
+                    .clickable {
+                        // Return to main launcher screen
+                        context.startActivity(
+                            Intent(context, MainActivity::class.java)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        )
+                        (context as? Activity)?.finish()
+                    }
+                    .padding(8.dp)
+            )
         }
     }
 }
