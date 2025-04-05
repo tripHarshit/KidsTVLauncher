@@ -109,14 +109,12 @@ fun PinVerificationScreen() {
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            // New Cancel Button
             Text(
                 text = "Cancel",
                 fontSize = 18.sp,
                 color = Color(0xFF2E7D32),
                 modifier = Modifier
                     .clickable {
-                        // Return to main launcher screen
                         context.startActivity(
                             Intent(context, MainActivity::class.java)
                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

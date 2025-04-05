@@ -8,23 +8,42 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.kidslauncher.models.PinManager
 import com.example.kidslauncher.screens.KidsLauncherScreen
 import com.example.kidslauncher.screens.PinSetupScreen
+import com.example.kidslauncher.utils.getAllInstalledApps
+import com.example.kidslauncher.utils.preloadApprovedApps
+import com.example.kidslauncher.utils.saveApprovedApps
 
 class MainActivity : ComponentActivity() {
+    private lateinit var sharedPref: android.content.SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val allApps = getAllInstalledApps(this)
+        allApps.forEach {
+            Log.d("INSTALLED_APP", "Name: ${it.name}, Package: ${it.packageName}")
+        }
+
+        // ✅ Preload apps if not already set
+        val sharedPreferences = getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
+        val approvedApps = sharedPreferences.getStringSet("approved_apps", null)
+        if (approvedApps == null || approvedApps.isEmpty()) {
+            preloadApprovedApps(this)
+        }
+
         setContent {
             if (PinManager.isPinSet(this)) {
+                preloadApprovedApps(this)
                 KidsLauncherScreen()
             } else {
-                PinSetupScreen(this)
+                PinSetupScreen()
             }
         }
     }
+
+
 
     override fun onBackPressed() {
         Log.d("BackPress", "Navigating to PIN screen")
@@ -32,6 +51,7 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
         finish()
     }
+
     override fun onResume() {
         super.onResume()
         val runningApps = getRunningApps(this)
@@ -61,5 +81,3 @@ private fun getRunningApps(context: Context): List<String> {
         ?.distinct()
         ?: emptyList()
 }
-
-

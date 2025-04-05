@@ -1,6 +1,7 @@
 package com.example.kidslauncher.screens
 
 
+import android.app.Activity
 import androidx.tv.material3.Text
 import com.example.kidslauncher.models.PinManager
 
@@ -18,18 +19,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kidslauncher.MainActivity
 
+
 @Composable
-fun PinSetupScreen(context: Context) {
+fun PinSetupScreen( ) {
+    val context = LocalContext.current
     var pin by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFFDE7)), // Soft creamy yellow background
+            .background(Color(0xFFFFEB3B)), // Soft creamy yellow background
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -68,15 +72,19 @@ fun PinSetupScreen(context: Context) {
                 onClick = {
                     if (pin.length >= 4) {
                         PinManager.savePin(context, pin)
-                        context.startActivity(Intent(context, MainActivity::class.java))
+                        val intent = Intent(context, MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        context.startActivity(intent)
+                        (context as? Activity)?.finish()
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350))
             ) {
-                Text("Save PIN", fontSize = 16.sp, color = Color.White)
+                Text("Save PIN", fontSize = 16.sp)
             }
         }
     }

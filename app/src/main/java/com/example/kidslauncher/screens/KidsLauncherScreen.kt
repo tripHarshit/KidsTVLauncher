@@ -13,8 +13,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,9 +30,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
+import com.example.kidslauncher.PinScreenActivity
 import com.example.kidslauncher.models.AppInfo
 import com.example.kidslauncher.utils.getApprovedApps
 import com.example.kidslauncher.utils.saveApprovedApps
+import com.example.kidslauncher.utils.addApprovedApp
 
 @Composable
 fun KidsLauncherScreen() {
@@ -42,9 +48,42 @@ fun KidsLauncherScreen() {
             .fillMaxSize()
             .background(Color(0xFFFFFDE7))
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFFFF176))
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Kids Launcher",
+                fontSize = 24.sp,
+                color = Color(0xFF2E7D32),
+                modifier = Modifier.padding(start = 16.dp)
+            )
+
+            IconButton(
+                onClick = {
+                    context.startActivity(Intent(context, PinScreenActivity::class.java))
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Color(0xFFFFF9C4), RoundedCornerShape(8.dp))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = "Exit",
+                    tint = Color(0xFF2E7D32)
+                )
+            }
+        }
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(4),
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 64.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
             items(installedApps) { app ->
@@ -53,7 +92,6 @@ fun KidsLauncherScreen() {
                     context = context,
                     isRemovalMode = isRemovalMode,
                     onRemove = {
-                        // Remove app from approved list
                         val newList = installedApps.filter { it.packageName != app.packageName }
                         saveApprovedApps(context, newList.map { it.packageName })
                         installedApps = getApprovedApps(context)
@@ -86,14 +124,16 @@ fun KidsLauncherScreen() {
                     contentColor = Color.White
                 )
             ) {
-                Text(if (isRemovalMode) "Cancel Remove" else "Remove Apps", fontSize = 16.sp)
+                Text(
+                    text = if (isRemovalMode) "Cancel Remove" else "Remove Apps",
+                    fontSize = 16.sp
+                )
             }
         }
 
         if (showAppSelection) {
             AppSelectionScreen { selectedApp ->
-                val newApprovedList = installedApps.map { it.packageName } + selectedApp
-                saveApprovedApps(context, newApprovedList)
+                addApprovedApp(context, selectedApp)
                 installedApps = getApprovedApps(context)
                 showAppSelection = false
             }
@@ -102,7 +142,12 @@ fun KidsLauncherScreen() {
 }
 
 @Composable
-fun AppItem(app: AppInfo, context: Context, isRemovalMode: Boolean, onRemove: () -> Unit) {
+fun AppItem(
+    app: AppInfo,
+    context: Context,
+    isRemovalMode: Boolean,
+    onRemove: () -> Unit
+) {
     Box(
         modifier = Modifier
             .size(150.dp)
@@ -166,5 +211,3 @@ fun AppItem(app: AppInfo, context: Context, isRemovalMode: Boolean, onRemove: ()
         }
     }
 }
-
-
