@@ -34,6 +34,18 @@ A custom launcher designed for Android TV that provides a kid-safe interface wit
 
 ---
 
+### 🔹 Project Structure
+
+- `MainActivity.kt`: Entry point of the app, shows either the PIN setup screen or the Kids Launcher home based on saved PIN.
+- `PinSetupScreen.kt`: UI for setting up a new PIN on first launch.
+- `PinScreenActivity.kt`: Auth screen to verify PIN before allowing exit.
+- `KidsLauncherScreen.kt`: The custom home screen showing approved apps.
+- `AppManager.kt`: Handles loading, filtering, and preloading approved apps.
+- `PinManager.kt`: Stores and validates the user’s PIN securely using SharedPreferences.
+- `BlockSettingsService.kt`: Accessibility service to block access to system settings (optional).
+
+---
+
 ## 📦 Setup Instructions
 
 1. Clone the repo:
