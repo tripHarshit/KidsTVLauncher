@@ -3,19 +3,22 @@ package com.example.kidslauncher.screens
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -23,31 +26,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
-import androidx.tv.material3.Text
-import android.util.Log
 import com.example.kidslauncher.models.AppInfo
-
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
-
-import androidx.tv.material3.*
-import com.example.kidslauncher.utils.ShowExitDialog
 import com.example.kidslauncher.utils.getApprovedApps
+import com.example.kidslauncher.utils.saveApprovedApps
 
 @Composable
 fun KidsLauncherScreen() {
     val context = LocalContext.current
-    var showDialog by remember { mutableStateOf(false) }
-    val installedApps = remember { getApprovedApps(context) }
+    var showAppSelection by remember { mutableStateOf(false) }
+    var installedApps by remember { mutableStateOf(getApprovedApps(context)) }
 
-    BackHandler {
-        showDialog = true  // Show PIN dialog when back is pressed
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFFFDE7)) // light warm yellow background
+    ) {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(4),
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp)
         ) {
@@ -56,9 +51,30 @@ fun KidsLauncherScreen() {
             }
         }
 
-        if (showDialog) {
-            ShowExitDialog(showDialog) {
-                showDialog = false
+        // Button to open App Selection Screen
+        Button(
+            onClick = { showAppSelection = true },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFB74D), // soft orange
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                "Add Approved App",
+                fontSize = 18.sp,
+                color = Color(0xFF4E342E)
+            )
+        }
+
+        if (showAppSelection) {
+            AppSelectionScreen { selectedApp ->
+                val newApprovedList = installedApps.map { it.packageName } + selectedApp
+                saveApprovedApps(context, newApprovedList)
+                installedApps = getApprovedApps(context)
+                showAppSelection = false
             }
         }
     }
@@ -67,17 +83,19 @@ fun KidsLauncherScreen() {
 
 @Composable
 fun AppItem(app: AppInfo, context: Context) {
-    var isFocused by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
-
     Box(
         modifier = Modifier
-            .size(120.dp)
-            .padding(8.dp)
-            .background(if (isFocused) Color(0xFFFFA000) else Color(0xFFE0E0E0))
-            .focusRequester(focusRequester)
-            .focusTarget()
-            .onFocusChanged { isFocused = it.isFocused }
+            .size(150.dp)
+            .padding(12.dp)
+            .background(
+                color = Color(0xFFFFF176),
+                shape = RoundedCornerShape(24.dp)
+            )
+            .border(
+                width = 2.dp,
+                color = Color(0xFFFB8C00), // orange border for clarity
+                shape = RoundedCornerShape(24.dp)
+            )
             .clickable {
                 val launchIntent = context.packageManager.getLaunchIntentForPackage(app.packageName)
                 launchIntent?.let { context.startActivity(it) }
@@ -93,11 +111,16 @@ fun AppItem(app: AppInfo, context: Context) {
                     bitmap = drawable.toBitmap().asImageBitmap(),
                     contentDescription = app.name,
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(60.dp)
+                    modifier = Modifier.size(72.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(app.name, fontSize = 14.sp, color = Color.Black)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                app.name,
+                fontSize = 16.sp,
+                color = Color(0xFF4A148C), // deep purple
+                maxLines = 1
+            )
         }
     }
 }

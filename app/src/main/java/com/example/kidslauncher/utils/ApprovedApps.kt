@@ -1,39 +1,62 @@
 package com.example.kidslauncher.utils
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import com.example.kidslauncher.models.AppInfo
 import androidx.core.content.edit
+import com.example.kidslauncher.models.AppInfo
 
 fun getApprovedApps(context: Context): List<AppInfo> {
     val packageManager = context.packageManager
     val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
-    val approvedPackages = sharedPreferences.getStringSet("approved_apps", setOf(
-        "com.google.android.youtube.kids",
-        "com.netflix.mediaclient",
-        "com.android.tv.settings",    // TV Settings
-        "com.android.vending",        // Google Play Store
-        "com.google.android.gms",     // Google Play Services
-        "com.google.android.tts"
-    )) ?: emptySet()
+    val approvedPackages = sharedPreferences.getStringSet("approved_apps", emptySet()) ?: emptySet()
 
-    return packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        .filter { it.packageName in approvedPackages }
-        .map {
+    return approvedPackages.mapNotNull { packageName ->
+        try {
+            val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             AppInfo(
-                name = packageManager.getApplicationLabel(it).toString(),
-                packageName = it.packageName,
-                icon = packageManager.getApplicationIcon(it)
+                name = packageManager.getApplicationLabel(appInfo).toString(),
+                packageName = appInfo.packageName,
+                icon = packageManager.getApplicationIcon(packageName)
             )
+        } catch (e: PackageManager.NameNotFoundException) {
+            null // Skip apps that are not found
         }
+    }
+}
+
+fun addApprovedApp(context: Context, packageName: String) {
+    val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
+    val approvedPackages = sharedPreferences.getStringSet("approved_apps", emptySet())?.toMutableSet() ?: mutableSetOf()
+
+    approvedPackages.add(packageName) // Add the new app
+
+    sharedPreferences.edit {
+        putStringSet("approved_apps", approvedPackages)
+    }
+
+    // Notify the system that the approved list has been updated
+    val intent = Intent("com.example.kidslauncher.UPDATE_APPROVED_APPS")
+    context.sendBroadcast(intent)
 }
 
 
 fun saveApprovedApps(context: Context, approvedApps: List<String>) {
     val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
-    sharedPreferences.edit() {
+    sharedPreferences.edit {
         putStringSet("approved_apps", approvedApps.toSet())
+        apply()
     }
+
+    // Notify BlockSettingsService to refresh approved apps
+    val intent = Intent("com.example.kidslauncher.UPDATE_APPROVED_APPS")
+    context.sendBroadcast(intent)
+}
+
+fun isAppApproved(context: Context, packageName: String): Boolean {
+    val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
+    val approvedPackages = sharedPreferences.getStringSet("approved_apps", emptySet()) ?: emptySet()
+    return approvedPackages.contains(packageName)
 }
 
 
