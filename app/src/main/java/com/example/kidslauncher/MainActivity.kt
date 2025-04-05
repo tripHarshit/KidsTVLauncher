@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
             Log.d("INSTALLED_APP", "Name: ${it.name}, Package: ${it.packageName}")
         }
 
-        // ✅ Preload apps if not already set
         val sharedPreferences = getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
         val approvedApps = sharedPreferences.getStringSet("approved_apps", null)
         if (approvedApps == null || approvedApps.isEmpty()) {

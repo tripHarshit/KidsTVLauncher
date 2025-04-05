@@ -31,9 +31,6 @@ fun getApprovedApps(context: Context): List<AppInfo> {
     }
 }
 
-
-
-
 fun addApprovedApp(context: Context, packageName: String) {
     val sharedPreferences = context.getSharedPreferences("KidsLauncherPrefs", Context.MODE_PRIVATE)
     val approvedPackages = sharedPreferences.getStringSet("approved_apps", emptySet())?.toMutableSet() ?: mutableSetOf()

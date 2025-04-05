@@ -33,7 +33,7 @@ fun PinSetupScreen( ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFEB3B)), // Soft creamy yellow background
+            .background(Color(0xFFFFEB3B)),
         contentAlignment = Alignment.Center
     ) {
         Column(

@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kidslauncher.MainActivity
+
 
 class PinScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

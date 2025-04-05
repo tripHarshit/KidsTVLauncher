@@ -12,7 +12,7 @@ object PinManager {
     fun savePin(context: Context, pin: String) {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         sharedPreferences.edit { putString(PIN_KEY, pin) }
-        Log.d("PinManager", "Saved PIN: $pin") // Log when PIN is saved
+        Log.d("PinManager", "Saved PIN: $pin")
     }
 
     fun getPin(context: Context): String? {
