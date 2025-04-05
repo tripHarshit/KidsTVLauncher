@@ -69,7 +69,6 @@ fun KidsLauncherScreen() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            // Add App Button
             Button(
                 onClick = { showAppSelection = true },
                 colors = ButtonDefaults.buttonColors(
@@ -80,7 +79,6 @@ fun KidsLauncherScreen() {
                 Text("Add Apps", fontSize = 16.sp)
             }
 
-            // Remove App Button
             Button(
                 onClick = { isRemovalMode = !isRemovalMode },
                 colors = ButtonDefaults.buttonColors(
@@ -133,7 +131,6 @@ fun AppItem(app: AppInfo, context: Context, isRemovalMode: Boolean, onRemove: ()
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Removal mode indicator
             if (isRemovalMode) {
                 Box(
                     modifier = Modifier
